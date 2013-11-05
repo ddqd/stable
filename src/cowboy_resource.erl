@@ -413,6 +413,8 @@ put_resource(Req, State = #state{method = <<"PATCH">>, body = Data,
 delete_resource(Req, State = #state{
     params = Params, handler = Handler, options = Opts, auth = Auth}) ->
   try Handler:delete(Params, [{auth, Auth} | Opts]) of
+    {ok, Path} ->
+       {true, set_resp_body(Path, Req), State};
     ok ->
       {true, Req, State#state{completed = true}};
     accepted ->
